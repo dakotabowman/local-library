@@ -19,6 +19,9 @@ function getTotalNumberOfBorrows(account, books) {
   return borrows;
 }
 
+function getAuthorById(authors, authorId) {
+  return authors.find(author => author.id === authorId);
+}
 
 function getBooksPossessedByAccount(account, books, authors) {
   const booksCheckedOut = [];
@@ -26,10 +29,8 @@ function getBooksPossessedByAccount(account, books, authors) {
     const borrows = book.borrows;
     const isCurrentlyCheckedOut = borrows.some(borrow => borrow.id === account.id && !borrow.returned);
     if (isCurrentlyCheckedOut) {
-      const bookCopy = { ...book };
-      const author = authors.find(author => author.id === bookCopy.authorId);
-      bookCopy.author = author;
-      booksCheckedOut.push(bookCopy);
+      const author = getAuthorById(authors, bookCopy.authorId);
+      bookCopy.author = author;booksCheckedOut.push(bookCopy);
     }
   }
   return booksCheckedOut;

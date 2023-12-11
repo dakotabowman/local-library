@@ -1,36 +1,27 @@
-function getTotalBooksCount(books) {
-  return books.length;
-}
+const getTotalBooksCount = (books) => books.length; // Used arrow function
 
-function getTotalAccountsCount(accounts) {
-  return accounts.length;
-}
+const getTotalAccountsCount = (accounts) => accounts.length;
 
+//Used .filter
 function getBooksBorrowedCount(books) {
-  return books.reduce((checkedOutCount, book) => {
-    if (book.borrows[0].returned === false) {
-      checkedOutCount += 1;
-    }
-    return checkedOutCount;
-  }, 0);
+  const checkedOutBooks = books.filter(book => !book.borrows[0].returned);
+  return checkedOutBooks.length;
 }
+
+//Helper function
+const countGenres = (books) => {
+  return books.reduce((count, book) => {
+    const bookGenre = book.genre;
+    count[bookGenre] = (count[bookGenre] || 0) + 1;
+    return count;
+  }, {});
+};
 
 function getMostCommonGenres(books) {
-  const genreCount = {};
-  for (const book of books) {
-    const bookGenre = book.genre;
-    if (genreCount[bookGenre]) {
-      genreCount[bookGenre]++;
-    } else {
-      genreCount[bookGenre] = 1;
-    }
-  }
-  const genresArray = [];
-  for (const genreName in genreCount) {
-    const genreCountValue = genreCount[genreName];
-    genresArray.push({ name: genreName, count: genreCountValue });
-  }
-  genresArray.sort((a, b) => b.count - a.count);
+  const genreCount = countGenres(books);
+
+  const genresArray = Object.entries(genreCount).map(([name, count]) => ({ name, count })).sort((a, b) => b.count - a.count);
+
   return genresArray.slice(0, 5);
 }
 
